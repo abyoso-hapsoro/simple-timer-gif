@@ -56,7 +56,7 @@ def create_timer_gif(
             assert len(color) == 4, 'Color defined by RGBA tuple must be exactly 4 elements.'
             assert all(isinstance(c, int) for c in color), 'Color defined by RGBA tuple must have all integer elements.'
 
-    # Consolidate result path and color
+    # Consolidate result path
     if result_path is None:
         result_path = f'timer{duration}.gif'
 
