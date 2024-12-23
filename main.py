@@ -6,6 +6,7 @@ from parse import parse_input
 
 def create_timer_gif(
     duration: int,
+    warning: int = -1,
     result_path: str = None,
     color: Union[str, Tuple[int, ...]] = (255, 255, 255, 0)
 ) -> None:
@@ -15,6 +16,8 @@ def create_timer_gif(
     Args:
         duration (int):
             Duration of timer in seconds.
+        warning (int, optional):
+            Low timer warning in seconds. Defaults to -1 — i.e. no warning.
         result_path (str, optional):
             Path to save the timer. Defaults to None.
         color (Union[str, Tuple[int, ...]], optional):
@@ -43,11 +46,19 @@ def create_timer_gif(
             $ python main.py --duration 10 --result_path "timergreen.gif" --color "#2cb037"
             $ python main.py 10 -p "timergreen.gif" -c "#2cb037"
             $ python main.py -d 10 -p "timergreen.gif" -c "#2cb037"
+        Create a timer with duration of 30 seconds with warning starting from 10 seconds.
+            $ python main.py 30 --warning 10
+            $ python main.py --duration 30 --warning 10
+            $ python main.py 30 -w 10
+            $ python main.py -d 30 -w 10
     """
 
     # Validate inputs
     assert isinstance(duration, int), 'Duration must be integer.'
     assert 1 <= duration <= 999, 'Duration must be between 1 and 999 inclusive.'
+    assert isinstance(warning, int), 'Warning must be integer.'
+    if warning != -1:
+        assert 1 <= warning <= duration - 1, 'Warning must be between 1 and duration - 1 inclusive.'
     if result_path:
         assert isinstance(result_path, str), 'Result path must be string.'
     if color:
@@ -90,7 +101,7 @@ def create_timer_gif(
             # Draw the dots
             draw.ellipse(
                 (x - dot_radius, y - dot_radius, x + dot_radius, y + dot_radius),
-                fill = 'black'
+                fill='black' if idx >= warning else 'red'
             )
         
         # Draw the central number
@@ -99,7 +110,7 @@ def create_timer_gif(
         draw.text(
             position,
             text,
-            fill='black',
+            fill='black' if t > warning else 'red',
             font=ImageFont.load_default(size=font_size)
         )
 

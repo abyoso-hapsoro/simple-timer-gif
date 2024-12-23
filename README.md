@@ -21,11 +21,12 @@ $ python main.py 10
 
 ### Customization
 Customization options:
+- warning (-w / --warning): Specify low timer warning
 - result_path (-p / --result_path): Specify filepath
 - color (-c / --color): Specify background color
 
-Create a timer with duration of 5 seconds with custom background and save to custom filename.
+Create a timer with duration of 5 seconds with warning from 2 seconds, custom background color and save to custom filename.
 ```shell
-$ python main.py 5 --result_path "timergreen.gif" --color "#2cb037"
+$ python main.py 5 -w 2 -p "timergreen.gif" -c "#2cb037"
 ```
 ![](timergreen.gif)
