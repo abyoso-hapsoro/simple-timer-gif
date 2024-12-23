@@ -45,6 +45,7 @@ def parse_input() -> dict:
 
     # Add flag arguments
     parser.add_argument('-d', '--duration', type=int, dest='flag_duration', required=False)
+    parser.add_argument('-w', '--warning', type=int, dest='warning', required=False)
     parser.add_argument('-p', '--result_path', type=str, dest='result_path', required=False)
     parser.add_argument('-c', '--color', type=str, dest='color', required=False)
 
@@ -53,6 +54,10 @@ def parse_input() -> dict:
 
     # Resolve duration value
     kwargs = {'duration': args.flag_duration if args.flag_duration is not None else args.duration}
+
+    # Resolve warning
+    if args.warning is not None:
+        kwargs.update({'warning': args.warning})
 
     # Resolve result path
     if args.result_path is not None:
