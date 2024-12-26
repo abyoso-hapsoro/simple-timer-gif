@@ -1,6 +1,7 @@
 import math
 from PIL import Image, ImageDraw, ImageFont
 from typing import Union, Tuple
+from validate import validate_input
 from parse import parse_input
 
 
@@ -54,18 +55,8 @@ def create_timer_gif(
     """
 
     # Validate inputs
-    assert isinstance(duration, int), 'Duration must be integer.'
-    assert 1 <= duration <= 999, 'Duration must be between 1 and 999 inclusive.'
-    assert isinstance(warning, int), 'Warning must be integer.'
-    if warning != -1:
-        assert 1 <= warning <= duration - 1, 'Warning must be between 1 and duration - 1 inclusive.'
-    if result_path:
-        assert isinstance(result_path, str), 'Result path must be string.'
-    if color:
-        assert type(color) in [str, tuple], 'Color must be string or RGBA tuple.'
-        if isinstance(color, tuple):
-            assert len(color) == 4, 'Color defined by RGBA tuple must be exactly 4 elements.'
-            assert all(isinstance(c, int) for c in color), 'Color defined by RGBA tuple must have all integer elements.'
+    args = [eval(arg) for arg in create_timer_gif.__code__.co_varnames[:create_timer_gif.__code__.co_argcount]]
+    validate_input(*args)
 
     # Consolidate result path
     if result_path is None:
