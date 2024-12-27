@@ -23,7 +23,7 @@ def _parse_color(color: str) -> Union[str, Tuple[int, ...]]:
         if isinstance(color, tuple) and len(color) == 4 and all(isinstance(c, int) for c in color):
             # Return color as tuple format
             return color
-    except:
+    except Exception:
         # Return color as string format
         return color
 
