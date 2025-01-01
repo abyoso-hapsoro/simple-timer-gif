@@ -95,14 +95,26 @@ def create_timer_gif(
                 fill='black' if idx >= warning else 'red'
             )
         
-        # Draw the central number
+        # Load font
+        font = ImageFont.load_default(size=font_size)
+
+        # Calculate center position
         text = str(t)
-        position = (260 - len(text)*40, 180)
+        # position = (250 - len(text)*35, 174)
+        left, top, right, bottom = font.getbbox(text)
+        width = right - left
+        height = bottom - top
+        position = (
+            (size[0] - width) // 2 - left,
+            (size[1] - height) // 2 - top
+        )
+        
+        # Draw the central number
         draw.text(
             position,
             text,
             fill='black' if t > warning else 'red',
-            font=ImageFont.load_default(size=font_size)
+            font=font
         )
 
         # Save the frame
