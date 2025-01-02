@@ -1,6 +1,6 @@
 import math
 from PIL import Image, ImageDraw, ImageFont
-from typing import Union, Tuple
+from typing import Union
 from validate import validate_input
 from parse import parse_input
 
@@ -9,7 +9,10 @@ def create_timer_gif(
     duration: int,
     warning: int = -1,
     result_path: str = None,
-    color: Union[str, Tuple[int, ...]] = (255, 255, 255, 0)
+    size: tuple[int, int] = (500, 500),
+    font_size: int = 120,
+    dot_radius: int = 8,
+    color: Union[str, tuple[int, ...]] = (255, 255, 255, 0)
 ) -> None:
     """
     Create a timer GIF that counts down to zero with elapsing dot indicators.
@@ -21,6 +24,12 @@ def create_timer_gif(
             Low timer warning in seconds. Defaults to -1 — i.e. no warning.
         result_path (str, optional):
             Path to save the timer. Defaults to None.
+        size (tuple[int, int], optional):
+            Image size in width x height in pixels. Defaults to (500, 500).
+        font_size (int, optional):
+            Font size of text in center of timer. Defaults to 120.
+        dot_radius (int, optional):
+            Distance of elapsing dot indicators to center. Defaults to 8.
         color (Union[str, Tuple[int, ...]], optional):
             Background color of the timer. Defaults to (255, 255, 255, 0) — i.e. transparent.
     
@@ -47,11 +56,26 @@ def create_timer_gif(
             $ python main.py --duration 10 --result_path "timergreen.gif" --color "#2cb037"
             $ python main.py 10 -p "timergreen.gif" -c "#2cb037"
             $ python main.py -d 10 -p "timergreen.gif" -c "#2cb037"
-        Create a timer with duration of 30 seconds with warning starting from 10 seconds.
+        Create a timer with duration of 30 seconds with warning from 10 seconds.
             $ python main.py 30 --warning 10
             $ python main.py --duration 30 --warning 10
             $ python main.py 30 -w 10
             $ python main.py -d 30 -w 10
+        Create a timer with duration of 30 seconds with GIF size of 450 x 550.
+            $ python main.py 30 --size (450,550)
+            $ python main.py --duration 30 --size (450,550)
+            $ python main.py 30 -s (450,550)
+            $ python main.py -d 30 -s (450,550)
+        Create a timer with duration of 30 seconds with font size of 150.
+            $ python main.py 30 --font_size 150
+            $ python main.py --duration 30 --font_size 150
+            $ python main.py 30 -f 150
+            $ python main.py -d 30 -f 150
+        Create a timer with duration of 30 seconds with dot radius of 15.
+            $ python main.py 30 --dot_radius 15
+            $ python main.py --duration 30 --dot_radius 15
+            $ python main.py 30 -r 15
+            $ python main.py -d 30 -r 15
     """
 
     # Validate inputs
@@ -61,11 +85,6 @@ def create_timer_gif(
     # Consolidate result path
     if result_path is None:
         result_path = f'timer{duration}.gif'
-
-    # Set option values
-    size = (500, 500)
-    font_size = 120
-    dot_radius = 8
 
     # Determine center and radius
     x0, y0 = [coord // 2 for coord in size]
@@ -121,14 +140,17 @@ def create_timer_gif(
         frames.append(image)
     
     # Save frames as GIF
-    frames[0].save(
-        result_path,
-        save_all=True,
-        append_images=frames[1:],
-        duration=1000,  # 1 second per frame
-        disposal=2,
-        loop=0
-    )
+    kwargs = {
+        'fp': result_path,
+        'save_all': True,
+        'append_images': frames[1:],
+        'duration': 1000,  # 1 second per frame
+        'loop': 0
+    }
+    try:
+        frames[0].save(disposal=2, **kwargs)
+    except ValueError:
+        frames[0].save(**kwargs)
 
 
 if __name__ == '__main__':
