@@ -1,5 +1,5 @@
 import sys
-from typing import Union, Tuple
+from typing import Union
 
 
 def _set_traceback_limit(n: int = 1000) -> None:
@@ -28,7 +28,10 @@ def validate_input(
     duration: int,
     warning: int,
     result_path: str,
-    color: Union[str, Tuple[int, ...]]
+    size: tuple[int, int],
+    font_size: int,
+    dot_radius: int,
+    color: Union[str, tuple[int, ...]]
 ) -> None:
     """
     Validate arguments passed to `main.py`
@@ -49,10 +52,24 @@ def validate_input(
     # Validate result path
     if result_path:
         assert isinstance(result_path, str), 'Result path must be string.'
+
+    # Validate size
+    assert isinstance(size, tuple), 'Size must be tuple.'
+    assert len(size) == 2, 'Size tuple must be exactly 2 elements.'
+    assert all(isinstance(s, int) for s in size), 'Size tuple must have all integer elements.'
+    assert all(s > 0 for s in size), 'All integer elements in size tuple must be positive.'
+
+    # Validate font size
+    assert isinstance(font_size, int), 'Font size must be integer.'
+    assert font_size > 0, 'Font size must be positive.'
     
+    # Validate dot radius
+    assert isinstance(dot_radius, int), 'Dot radius must be integer.'
+    assert dot_radius > 0, 'Dot radius must be positive.'
+
     # Validate color
-    if color:
-        assert type(color) in [str, tuple], 'Color must be string or RGBA tuple.'
-        if isinstance(color, tuple):
-            assert len(color) == 4, 'Color defined by RGBA tuple must be exactly 4 elements.'
-            assert all(isinstance(c, int) for c in color), 'Color defined by RGBA tuple must have all integer elements.'
+    assert type(color) in [str, tuple], 'Color must be string or RGBA tuple.'
+    if isinstance(color, tuple):
+        assert len(color) == 4, 'Color defined by RGBA tuple must be exactly 4 elements.'
+        assert all(isinstance(c, int) for c in color), 'Color defined by RGBA tuple must have all integer elements.'
+        assert all(0 <= c <= 255 for c in color), 'All color channels must be integers between 0 and 255 inclusive.'
