@@ -79,8 +79,7 @@ def create_timer_gif(
     """
 
     # Validate inputs
-    args = [eval(arg) for arg in create_timer_gif.__code__.co_varnames[:create_timer_gif.__code__.co_argcount]]
-    validate_input(*args)
+    validate_input(**locals())
 
     # Consolidate result path
     if result_path is None:
